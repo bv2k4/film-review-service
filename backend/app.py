@@ -2,6 +2,7 @@ import torch
 from torch import nn
 from transformers import DistilBertTokenizer, DistilBertModel
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 class DistilBertMultitaskModel(nn.Module):
@@ -22,6 +23,14 @@ class DistilBertMultitaskModel(nn.Module):
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 tokenizer = DistilBertTokenizer.from_pretrained('model/tokenizer')
@@ -37,18 +46,18 @@ class ReviewRequest(BaseModel):
 @app.post("/predict")
 def predict(review: ReviewRequest):
     text = review.text
-    
+
     encoding = tokenizer(text, return_tensors='pt', truncation=True, padding=True, max_length=256)
     encoding = {k: v.to(device) for k, v in encoding.items()}
-    
+
     with torch.no_grad():
         sentiment_logits, rating_pred = model(**encoding)
-    
+
     sentiment_probs = torch.softmax(sentiment_logits, dim=1)
     sentiment = "Positive" if sentiment_probs[0][1] > 0.5 else "Negative"
     sentiment_confidence = sentiment_probs[0][1].item() if sentiment == "Positive" else sentiment_probs[0][0].item()
     rating = rating_pred.squeeze().item()
-    
+
     return {
         'sentiment': sentiment,
         'confidence': sentiment_confidence,
