@@ -39,7 +39,7 @@ To get a local copy up and running, follow these simple steps.
 
 ### Configuration
 
-Before running the application, create a .env file in the root directory of the project and add the following environment variables:
+Before running the application, create a .env file in the root directory of the project and add the following environment variables (or just create an empty .env file):
 
 ```env
 FRONTEND_PORT=3000

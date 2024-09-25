@@ -13,4 +13,4 @@ build
 npm-debug.log
 .DS_Store
 
-test/
+tests/
