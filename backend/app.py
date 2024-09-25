@@ -1,9 +1,11 @@
+from fastapi import FastAPI, HTTPException, status
+from pydantic import BaseModel, validator
 import torch
 from torch import nn
 from transformers import DistilBertTokenizer, DistilBertModel
-from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+import os
+import re
 
 class DistilBertMultitaskModel(nn.Module):
     def __init__(self, num_labels=2):
@@ -25,7 +27,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[os.getenv('FRONTEND_URL', 'http://localhost:3000')],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -43,10 +45,34 @@ model.eval()
 class ReviewRequest(BaseModel):
     text: str
 
+    @validator('text')
+    def validate_text(cls, v):
+        v = v.strip()
+
+        if not v:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="The review cannot be empty.")
+        
+        if not re.search('[a-zA-Z]', v):
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="The review must contain at least one letter.")
+        
+        min_words = 10
+        if len(v.split()) < min_words:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"The review must contain at least {min_words} words.")
+        
+        max_words = 256
+        if len(v.split()) > max_words:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"The review must contain no more than {max_words} words.")
+        
+        max_word_length = 30
+        if any(len(word) > max_word_length for word in v.split()):
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Each word in the review must not exceed {max_word_length} characters.")
+        
+        return v
+
 @app.post("/predict")
 def predict(review: ReviewRequest):
     text = review.text
-
+    
     encoding = tokenizer(text, return_tensors='pt', truncation=True, padding=True, max_length=256)
     encoding = {k: v.to(device) for k, v in encoding.items()}
 
@@ -64,6 +90,14 @@ def predict(review: ReviewRequest):
         'rating': rating
     }
 
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(
+        app, 
+        host=os.getenv('BACKEND_HOST', '0.0.0.0'), 
+        port=int(os.getenv('BACKEND_PORT', 8000))
+    )

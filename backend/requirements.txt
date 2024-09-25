@@ -1,5 +1,5 @@
-torch
 transformers
 fastapi
 pydantic
 uvicorn
+httpx

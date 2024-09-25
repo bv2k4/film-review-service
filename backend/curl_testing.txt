@@ -1,3 +1,0 @@
-curl -X POST "http://localhost:8000/predict" ^
-     -H "Content-Type: application/json" ^
-     -d "{\"text\": \"This movie was absolutely fantastic! The acting was superb and the plot kept me on the edge of my seat the entire time. I highly recommend it to everyone.\"}"
