@@ -9,8 +9,6 @@ services:
     networks:
       - mynetwork
     restart: always
-    depends_on:
-      - frontend
     env_file:
       - .env
     healthcheck:
@@ -25,7 +23,7 @@ services:
       dockerfile: frontend.dockerfile
     container_name: frontend-app
     ports:
-      - "${FRONTEND_PORT:-3000}:80"
+      - "${FRONTEND_PORT:-3000}:${FRONTEND_PORT:-3000}"
     networks:
       - mynetwork
     restart: always
