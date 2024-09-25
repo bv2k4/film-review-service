@@ -12,4 +12,4 @@ RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://
 
 COPY . .
 
-CMD ["sh", "-c", "uvicorn app:app --host ${BACKEND_HOST:-localhost} --port ${BACKEND_PORT:-8000}"]
+CMD ["sh", "-c", "uvicorn app:app --host ${BACKEND_HOST:-0.0.0.0} --port ${BACKEND_PORT:-8000}"]

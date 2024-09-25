@@ -13,15 +13,15 @@ const App: React.FC = () => {
         if (!trimmedText) {
             return 'The review cannot be empty.';
         }
+        if (!/[a-zA-Z]/.test(trimmedText)) {
+            return 'The review must contain at least one letter.';
+        }
         const words = trimmedText.split(/\s+/);
         if (words.length < 10) {
             return 'The review must contain at least 10 words.';
         }
         if (words.length > 256) {
             return 'The review must contain no more than 256 words.';
-        }
-        if (!/[a-zA-Z]/.test(trimmedText)) {
-            return 'The review must contain at least one letter.';
         }
         if (words.some(word => word.length > 30)) {
             return 'Each word in the review must not exceed 30 characters.';
