@@ -6,6 +6,15 @@ COPY package*.json ./
 RUN npm install --frozen-lockfile
 
 COPY . .
+
+ARG REACT_APP_API_URL
+ARG BACKEND_HOST
+ARG BACKEND_PORT
+
+ENV REACT_APP_API_URL=${REACT_APP_API_URL}
+ENV BACKEND_HOST=${BACKEND_HOST}
+ENV BACKEND_PORT=${BACKEND_PORT}
+
 RUN npm run build
 
 FROM nginx:alpine

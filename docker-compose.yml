@@ -21,6 +21,10 @@ services:
     build:
       context: ./frontend
       dockerfile: frontend.dockerfile
+      args:
+        REACT_APP_API_URL: ${REACT_APP_API_URL}
+        BACKEND_HOST: ${BACKEND_HOST}
+        BACKEND_PORT: ${BACKEND_PORT}
     container_name: frontend-app
     ports:
       - "${FRONTEND_PORT:-3000}:${FRONTEND_PORT:-3000}"

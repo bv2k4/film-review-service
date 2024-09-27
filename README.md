@@ -42,13 +42,13 @@ To get a local copy up and running, follow these simple steps.
 Before running the application, create a .env file in the root directory of the project and add the following environment variables (or just create an empty .env file):
 
 ```env
-FRONTEND_PORT=3000
 BACKEND_PORT=8000
-
 BACKEND_HOST=0.0.0.0
+
+FRONTEND_PORT=3000
 FRONTEND_HOST=localhost
 
-REACT_APP_API_URL=http://${BACKEND_HOST}:${BACKEND_PORT}
+REACT_APP_API_URL=http://localhost:8000
 FRONTEND_URL=http://${FRONTEND_HOST}:${FRONTEND_PORT}
 ```
 ## Running the Application
