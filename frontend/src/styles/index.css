@@ -1,0 +1,41 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap');
+
+body {
+  @apply bg-gray-900 text-green-400;
+  font-family: 'Fira Code', monospace;
+}
+
+.console-cursor {
+  @apply inline-block w-2 h-5 bg-green-400;
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.loading-animation::after {
+  content: '|';
+  animation: loading 1s infinite steps(4);
+}
+
+@keyframes loading {
+  0% { content: '|'; }
+  25% { content: '/'; }
+  50% { content: '—'; }
+  75% { content: '\\'; }
+}
+
+.sentiment-positive {
+  @apply text-green-400;
+}
+
+.sentiment-negative {
+  @apply text-red-400;
+}
