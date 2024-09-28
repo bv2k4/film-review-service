@@ -25,9 +25,16 @@ class DistilBertMultitaskModel(nn.Module):
 
 app = FastAPI()
 
+server_name = os.getenv('SERVER_NAME', 'http://localhost')
+frontend_port = os.getenv('FRONTEND_PORT', '80')
+allowed_origins = [
+    f"{server_name}",
+    f"{server_name}:{frontend_port}",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[os.getenv('FRONTEND_URL', 'http://localhost:3000')],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -52,7 +59,7 @@ class ReviewRequest(BaseModel):
         if not v:
             raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="The review cannot be empty.")
         
-        if not re.search('[a-zA-Z]', v):
+        if not re.search(r'[a-zA-Zа-яА-ЯёЁ]', v):
             raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="The review must contain at least one letter.")
         
         min_words = 10

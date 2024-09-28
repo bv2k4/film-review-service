@@ -1,3 +1,8 @@
 .env
 __pycache__
 .pytest_cache
+*aux
+*fdb_latexmk
+*fls
+*log
+*synctex.gz

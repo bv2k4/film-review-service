@@ -9,7 +9,7 @@ export const validateReview = (text: string): string | null => {
         return 'The review cannot be empty.';
     }
     
-    if (!/[a-zA-Z]/.test(trimmedText)) {
+    if (!/[a-zA-Zа-яА-ЯёЁ]/.test(trimmedText)) {
         return 'The review must contain at least one letter.';
     }
     

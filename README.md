@@ -45,11 +45,10 @@ Before running the application, create a .env file in the root directory of the 
 BACKEND_PORT=8000
 BACKEND_HOST=0.0.0.0
 
-FRONTEND_PORT=3000
-FRONTEND_HOST=localhost
+FRONTEND_PORT=80
+SERVER_NAME=http://localhost
 
-REACT_APP_API_URL=http://localhost:8000
-FRONTEND_URL=http://${FRONTEND_HOST}:${FRONTEND_PORT}
+REACT_APP_API_URL=${SERVER_NAME}:${BACKEND_PORT}
 ```
 ## Running the Application
 To start the application using Docker Compose, run the following command in the root directory of your project:
@@ -65,7 +64,7 @@ docker-compose down
 ```
 
 ## Usage
-After starting the application, navigate to http://localhost:3000 in your web browser.
+After starting the application, navigate to http://localhost:80 in your web browser.
 Use the frontend interface to input movie reviews and receive sentiment and rating predictions.
 The backend will process the request using the FastAPI service, leveraging the DistilBERT model to generate predictions.
 ## License
