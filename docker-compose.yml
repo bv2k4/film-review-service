@@ -2,7 +2,7 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: backend.dockerfile
+      dockerfile: Dockerfile
     container_name: fastapi-backend
     ports:
       - "${BACKEND_PORT:-8000}:${BACKEND_PORT:-8000}"
@@ -12,7 +12,7 @@ services:
     env_file:
       - .env
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://${BACKEND_HOST:-0.0.0.0}:${BACKEND_PORT:-8000}/health"]
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://${BACKEND_HOST:-0.0.0.0}:${BACKEND_PORT:-8000}/health')"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -20,7 +20,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: frontend.dockerfile
+      dockerfile: Dockerfile
       args:
         REACT_APP_API_URL: ${REACT_APP_API_URL}
         BACKEND_HOST: ${BACKEND_HOST}
