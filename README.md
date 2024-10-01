@@ -51,7 +51,7 @@ SERVER_NAME=http://localhost
 REACT_APP_API_URL=${SERVER_NAME}:${BACKEND_PORT}
 ```
 ## Running the Application
-To start the application using Docker Compose, run the following command in the root directory of your project:
+To start the application using Docker Compose, run the following command in the root directory of the project:
 ```
 docker-compose up --build
 ```
